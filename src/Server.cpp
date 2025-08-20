@@ -12,15 +12,7 @@ bool match_pattern(const std::string& input_line, const std::string& pattern) {
     }
     else if (pattern == "\\w")
     {
-        for (int i = 0; i < input_line.length(); i++)
-        {
-            if (!std::isalpha(input_line[i]) && input_line[i] != '_' && !std::isdigit(input_line[i]))
-            {
-                return false;
-            }
-        }
-
-        return true;
+        return input_line.find_first_of("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_") != std::string::npos;
     }
     else {
         throw std::runtime_error("Unhandled pattern " + pattern);
