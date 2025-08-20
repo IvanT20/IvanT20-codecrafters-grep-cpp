@@ -14,6 +14,14 @@ bool match_pattern(const std::string& input_line, const std::string& pattern) {
     {
         return input_line.find_first_of("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_") != std::string::npos;
     }
+    else if (pattern[0] == '[' && pattern[pattern.length() - 1] == ']')
+    {   
+        if (pattern.length() > 2)
+        {
+            return input_line.find_first_of(pattern.substr(1, pattern.size() - 2)) != std::string::npos;
+        }
+        throw std::runtime_error("Unhandled pattern " + pattern);
+    }
     else {
         throw std::runtime_error("Unhandled pattern " + pattern);
     }
