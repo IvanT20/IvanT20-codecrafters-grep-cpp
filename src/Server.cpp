@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <cctype>
 
 bool match_pattern(const std::string& input_line, const std::string& pattern) {
     if (pattern.length() == 1) {
@@ -8,6 +9,18 @@ bool match_pattern(const std::string& input_line, const std::string& pattern) {
     else if (pattern == "\\d")
     {
         return input_line.find_first_of("0123456789") != std::string::npos;
+    }
+    else if (pattern == "\\w")
+    {
+        for (int i = 0; i < input_line.length(); i++)
+        {
+            if (!std::isalpha(input_line[i]) && input_line[i] != '_' && !std::isdigit(input_line[i]))
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
     else {
         throw std::runtime_error("Unhandled pattern " + pattern);
