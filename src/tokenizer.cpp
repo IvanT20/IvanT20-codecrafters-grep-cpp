@@ -46,9 +46,6 @@ void Tokenizer::tokenize(const std::string& pattern)
                     tokens.push_back(token);
                     ++i;
                     continue;
-
-                default:
-                    throw std::runtime_error("Unhandled character pattern: " + pattern);
             }
         }
 
