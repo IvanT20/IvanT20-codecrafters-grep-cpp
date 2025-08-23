@@ -1,34 +1,10 @@
 #include <iostream>
 #include <string>
-#include <cctype>
 
-bool match_pattern(const std::string& input_line, const std::string& pattern) {
-    if (pattern.length() == 1) {
-        return input_line.find(pattern) != std::string::npos;
-    }
-    else if (pattern == "\\d")
-    {
-        return input_line.find_first_of("0123456789") != std::string::npos;
-    }
-    else if (pattern == "\\w")
-    {
-        return input_line.find_first_of("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_") != std::string::npos;
-    }
-    else if (pattern.front() == '[' && pattern.back() == ']')
-    {   
-        if (pattern[1] == '^')
-        {
-            return input_line.find_first_not_of(pattern.substr(2, pattern.size() - 3)) != std::string::npos;
-            
-        }
-        return input_line.find_first_of(pattern.substr(1, pattern.size() - 2)) != std::string::npos;
-    }
-    else {
-        throw std::runtime_error("Unhandled pattern " + pattern);
-    }
-}
+#include "tokenizer.hpp"
 
-int main(int argc, char* argv[]) {
+int main(int argc, char* argv[]) 
+{
     // Flush after every std::cout / std::cerr
     std::cout << std::unitbuf;
     std::cerr << std::unitbuf;
@@ -36,31 +12,42 @@ int main(int argc, char* argv[]) {
     // You can use print statements as follows for debugging, they'll be visible when running tests.
     std::cerr << "Logs from your program will appear here" << std::endl;
 
-    if (argc != 3) {
+    if (argc != 3) 
+    {
         std::cerr << "Expected two arguments" << std::endl;
         return 1;
     }
-
+    
     std::string flag = argv[1];
     std::string pattern = argv[2];
 
-    if (flag != "-E") {
+    if (flag != "-E") 
+    {
         std::cerr << "Expected first argument to be '-E'" << std::endl;
         return 1;
     }
     
     std::string input_line;
     std::getline(std::cin, input_line);
-    
-    try {
-        if (match_pattern(input_line, pattern)) {
+    Tokenizer tokenizer(input_line, pattern);
+
+    try 
+    {
+        bool matched = tokenizer.match();
+        
+        if (matched)
+        {
             std::cout << 0 << std::endl;
             return 0;
-        } else {
+        }
+        else
+        {   
             std::cout << 1 << std::endl;
             return 1;
         }
-    } catch (const std::runtime_error& e) {
+    } 
+    catch (const std::runtime_error& e) 
+    {
         std::cerr << e.what() << std::endl;
         return 1;
     }
