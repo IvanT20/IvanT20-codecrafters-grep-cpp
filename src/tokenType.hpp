@@ -9,7 +9,8 @@ enum class TokenType
     Digit,
     Word,
     PosGroup,
-    NegGroup
+    NegGroup,
+    LineAnchor
 };
 
 struct Token

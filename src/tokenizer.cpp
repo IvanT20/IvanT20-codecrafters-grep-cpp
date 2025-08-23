@@ -11,10 +11,16 @@ void Tokenizer::tokenize(const std::string& pattern)
     for (int i = 0; i < pattern.length(); i++)
     {
         Token token;
+        
         if (pattern[i] == '[')
         {
             ++i;
             token.type = (i < pattern.length() && pattern[i] == '^') ? TokenType::NegGroup : TokenType::PosGroup;
+
+            if (token.type == TokenType::NegGroup)
+            {
+                ++i;
+            }
 
             while (i < pattern.length() && pattern[i] != ']')
             {
@@ -29,7 +35,7 @@ void Tokenizer::tokenize(const std::string& pattern)
             tokens.push_back(token);
             continue; // To go past the ] for the next character
         }
-        if (pattern[i] == '\\' && i + 1 < pattern.length())
+        else if (pattern[i] == '\\' && i + 1 < pattern.length())
         {
             char charRegex = pattern[i + 1];
 
@@ -47,6 +53,12 @@ void Tokenizer::tokenize(const std::string& pattern)
                     ++i;
                     continue;
             }
+        }
+        else if (pattern[i] == '^')
+        {
+            token.type = TokenType::LineAnchor;
+            tokens.push_back(token);
+            continue;
         }
 
         token.type = TokenType::Literal;
@@ -92,8 +104,36 @@ bool Tokenizer::matchPosition(int pos)
     return true;
 }
 
+bool Tokenizer::lineAnchorTest()
+{
+    if (tokens.size() == 1)
+    {
+        return true;
+    }
+
+    if (tokens.size() - 1 > value.size())
+    {
+        return false;
+    }
+
+    for (int i = 1, j = 0; i < tokens.size(); ++i, ++j)
+    {
+        if (!matchToken(tokens[i], value[j]))
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
+
 bool Tokenizer::match()
 {   
+    if (tokens[0].type == TokenType::LineAnchor)
+    {
+        return lineAnchorTest();
+    }
+
     for (int i = 0; i < value.length(); i++)
     {
         if (matchPosition(i))
@@ -103,4 +143,42 @@ bool Tokenizer::match()
     }
 
     return false;
+}
+
+void Tokenizer::print()
+{
+    for (auto& ele : tokens)
+    {
+        switch (ele.type)
+        {
+
+            case TokenType::Literal:
+                std::cout << "LITERAL, ";
+                break;
+            
+            case TokenType::Digit:
+                std::cout << "DIGIT, ";
+                break;
+            
+            case TokenType::Word:
+                std::cout << "WORD, ";
+                break;
+            
+            case TokenType::PosGroup:
+                std::cout << "POS_GROUP, ";
+                break;
+            
+            case TokenType::NegGroup:
+                std::cout << "NEG_GROUP, ";
+                break;
+            
+            case TokenType::LineAnchor:
+                std::cout << "LINE_ANCHOR, ";
+                break;
+
+            default:
+                break;
+        }
+    }
+    std::cout << '\n';
 }
