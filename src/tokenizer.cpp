@@ -110,53 +110,63 @@ bool Tokenizer::matchPosition(int pos)
     return true;
 }
 
-bool Tokenizer::lineTest(bool checkStart)
-{
+bool Tokenizer::lineTest()
+{   
     if (tokens.size() == 1)
     {
         return true;
     }
 
-    if (tokens.size() - 1 > value.size())
-    {
-        return false;
-    }
+    bool hasStart = tokens[0].type == TokenType::StartLineAnchor;
+    bool hasEnd = tokens[tokens.size() - 1].type == TokenType::EndLineAnchor;
+    int startIndex = hasStart ? 1 : 0;
+    int endIndex = hasEnd ? tokens.size() - 2 : tokens.size() - 1;
+    int patternLength = endIndex - startIndex + 1;
 
-    if (checkStart)
+    if (hasStart && hasEnd)
     {
-        for (int i = 1, j = 0; i < tokens.size(); ++i, ++j)
+        if (patternLength != value.length())
         {
-            if (!matchToken(tokens[i], value[j]))
+            return false;
+        }
+
+        for (int i = 0; i < patternLength; i++)
+        {
+            if (!matchToken(tokens[startIndex + i], value[i]))
             {
                 return false;
             }
         }
+        return true;
     }
-    else
-    {
-        for (int i = tokens.size() - 2, j = value.size() - 1; i < tokens.size(); --i, --j)
+    else if (hasStart)
+    {   
+        for (int i = 0; i < patternLength; i++)
         {
-            if (!matchToken(tokens[i], value[j]))
+            if (!matchToken(tokens[startIndex + i], value[i]))
             {
                 return false;
             }
         }
+        return true;
     }
-    
-
-    return true;
+    else 
+    {
+        for (int i = endIndex, j = value.size() - 1; i >= 0; i--, j--)
+        {
+            if (!matchToken(tokens[i], value[j]))
+                return false;
+        }
+        return true;
+    }
 }
 
 
 bool Tokenizer::match()
 {   
-    if (tokens[0].type == TokenType::StartLineAnchor)
+    if (tokens[0].type == TokenType::StartLineAnchor || (tokens.size() > 0 && tokens[tokens.size() - 1].type == TokenType::EndLineAnchor))
     {
-        return lineTest(true);
-    }
-    else if (tokens.size() > 0 && tokens[tokens.size() - 1].type == TokenType::EndLineAnchor)
-    {
-        return lineTest(false);
+        return lineTest();
     }
 
     for (int i = 0; i < value.length(); i++)
