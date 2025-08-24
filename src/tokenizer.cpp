@@ -56,7 +56,13 @@ void Tokenizer::tokenize(const std::string& pattern)
         }
         else if (pattern[i] == '^')
         {
-            token.type = TokenType::LineAnchor;
+            token.type = TokenType::StartLineAnchor;
+            tokens.push_back(token);
+            continue;
+        }
+        else if (pattern[i] == '$')
+        {
+            token.type = TokenType::EndLineAnchor;
             tokens.push_back(token);
             continue;
         }
@@ -104,7 +110,7 @@ bool Tokenizer::matchPosition(int pos)
     return true;
 }
 
-bool Tokenizer::lineAnchorTest()
+bool Tokenizer::lineTest(bool checkStart)
 {
     if (tokens.size() == 1)
     {
@@ -116,22 +122,41 @@ bool Tokenizer::lineAnchorTest()
         return false;
     }
 
-    for (int i = 1, j = 0; i < tokens.size(); ++i, ++j)
+    if (checkStart)
     {
-        if (!matchToken(tokens[i], value[j]))
+        for (int i = 1, j = 0; i < tokens.size(); ++i, ++j)
         {
-            return false;
+            if (!matchToken(tokens[i], value[j]))
+            {
+                return false;
+            }
         }
     }
+    else
+    {
+        for (int i = tokens.size() - 2, j = value.size() - 1; i < tokens.size(); --i, --j)
+        {
+            if (!matchToken(tokens[i], value[j]))
+            {
+                return false;
+            }
+        }
+    }
+    
 
     return true;
 }
 
+
 bool Tokenizer::match()
 {   
-    if (tokens[0].type == TokenType::LineAnchor)
+    if (tokens[0].type == TokenType::StartLineAnchor)
     {
-        return lineAnchorTest();
+        return lineTest(true);
+    }
+    else if (tokens.size() > 0 && tokens[tokens.size() - 1].type == TokenType::EndLineAnchor)
+    {
+        return lineTest(false);
     }
 
     for (int i = 0; i < value.length(); i++)
@@ -172,8 +197,12 @@ void Tokenizer::print()
                 std::cout << "NEG_GROUP, ";
                 break;
             
-            case TokenType::LineAnchor:
-                std::cout << "LINE_ANCHOR, ";
+            case TokenType::StartLineAnchor:
+                std::cout << "START_LINE_ANCHOR, ";
+                break;
+            
+            case TokenType::EndLineAnchor:
+                std::cout << "END_LINE_ANCHOR, ";
                 break;
 
             default:

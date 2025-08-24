@@ -16,7 +16,7 @@ struct Tokenizer
     void tokenize(const std::string& pattern);
     bool matchPosition(int pos);
     bool matchToken(Token& token, char c);
-    bool lineAnchorTest();
+    bool lineTest(bool checkStart);
     bool match();
     void print();
     std::vector<Token> tokens;

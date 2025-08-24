@@ -10,7 +10,8 @@ enum class TokenType
     Word,
     PosGroup,
     NegGroup,
-    LineAnchor
+    StartLineAnchor,
+    EndLineAnchor
 };
 
 struct Token
