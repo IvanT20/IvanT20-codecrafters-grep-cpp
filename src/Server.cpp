@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
 
-#include "tokenizer.hpp"
+#include "patternMatcher.hpp"
 
 int main(int argc, char* argv[]) 
 {
@@ -29,11 +29,12 @@ int main(int argc, char* argv[])
     
     std::string input_line;
     std::getline(std::cin, input_line);
-    Tokenizer tokenizer(input_line, pattern);
+    
+    PatternMatcher patternMatcher(pattern);
 
     try 
     {
-        bool matched = tokenizer.match();
+        bool matched = patternMatcher.match(input_line);
         
         if (matched)
         {

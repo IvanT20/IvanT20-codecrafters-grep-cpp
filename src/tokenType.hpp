@@ -2,6 +2,7 @@
 #define TOKEN_TYPE_H
 
 #include <string>
+#include <array>
 
 enum class TokenType
 {
@@ -11,13 +12,21 @@ enum class TokenType
     PosGroup,
     NegGroup,
     StartLineAnchor,
-    EndLineAnchor
+    EndLineAnchor,
+};
+
+enum class Quantifier
+{
+    None,
+    OneOrMore
 };
 
 struct Token
 {
     TokenType type;
     char value;
+    std::array<bool, 128> charGroup;
+    Quantifier quantifier;
 };
 
 #endif
