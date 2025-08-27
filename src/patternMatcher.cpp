@@ -54,9 +54,9 @@ bool PatternMatcher::matchPos(const std::string& input, int inputIndex, int toke
         int offset = (m_tokens[tokenIndex].type == TokenType::StartLineAnchor) || (m_tokens[tokenIndex].type == TokenType::EndLineAnchor) ? 0 : 1;
         return matchPos(input, inputIndex + offset, tokenIndex + 1);
     }
-    else
+    else if (m_tokens[tokenIndex].quantifier == Quantifier::OneOrMore)
     {   
-        int minCount = m_tokens[tokenIndex].quantifier == Quantifier::OneOrMore ? 1 : 0;
+        int minCount = 1;
         int count = 0;
         int i = inputIndex;
 
@@ -73,6 +73,19 @@ bool PatternMatcher::matchPos(const std::string& input, int inputIndex, int toke
                 return true;
             }
         }
+    }
+    else if (m_tokens[tokenIndex].quantifier == Quantifier::ZeroOrOne)
+    {
+        int count = 0;
+        int i = inputIndex;
+
+        while (i < input.size() && matchToken(i))
+        {
+            ++i;
+            ++count;
+        }
+
+        return count <= 1;
     }
 
     return false;

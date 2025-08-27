@@ -10,7 +10,7 @@ std::vector<Token> Tokenizer::tokenize(const std::string& pattern)
     {
         Token token;
         token.quantifier = Quantifier::None;
-        
+
         if (pattern[i] == '[')
         {
             ++i;
@@ -68,6 +68,11 @@ std::vector<Token> Tokenizer::tokenize(const std::string& pattern)
         else if (pattern[i] == '+')
         {
             tokens.back().quantifier = Quantifier::OneOrMore;
+            continue;
+        }
+        else if (pattern[i] == '?')
+        {
+            tokens.back().quantifier = Quantifier::ZeroOrOne;
             continue;
         }
 

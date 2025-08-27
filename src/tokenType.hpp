@@ -18,7 +18,8 @@ enum class TokenType
 enum class Quantifier
 {
     None,
-    OneOrMore
+    OneOrMore,
+    ZeroOrOne
 };
 
 struct Token
