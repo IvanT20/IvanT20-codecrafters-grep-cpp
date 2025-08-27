@@ -75,6 +75,12 @@ std::vector<Token> Tokenizer::tokenize(const std::string& pattern)
             tokens.back().quantifier = Quantifier::ZeroOrOne;
             continue;
         }
+        else if (pattern[i] == '.')
+        {
+            token.type = TokenType::AnyCharacter;
+            tokens.push_back(token);
+            continue;
+        }
 
         token.type = TokenType::Literal;
         token.value = pattern[i];

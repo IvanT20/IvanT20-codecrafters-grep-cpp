@@ -33,6 +33,8 @@ bool PatternMatcher::matchPos(const std::string& input, int inputIndex, int toke
                 return index == 0;
             case TokenType::EndLineAnchor:
                 return index == input.size();
+            case TokenType::AnyCharacter:
+                return true;
             default:
                 return false;
         }

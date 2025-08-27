@@ -13,6 +13,7 @@ enum class TokenType
     NegGroup,
     StartLineAnchor,
     EndLineAnchor,
+    AnyCharacter
 };
 
 enum class Quantifier
