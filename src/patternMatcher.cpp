@@ -76,16 +76,20 @@ bool PatternMatcher::matchPos(const std::string& input, int inputIndex, int toke
     }
     else if (m_tokens[tokenIndex].quantifier == Quantifier::ZeroOrOne)
     {
-        int count = 0;
-        int i = inputIndex;
-
-        while (i < input.size() && matchToken(i))
+        if (matchPos(input, inputIndex, tokenIndex + 1))
         {
-            ++i;
-            ++count;
+            return true;
         }
 
-        return count <= 1;
+        if (inputIndex < input.size() && matchToken(inputIndex))
+        {
+            if (matchPos(input, inputIndex + 1, tokenIndex + 1))
+            {
+                return true;
+            }
+        }
+        
+        return false;
     }
 
     return false;
