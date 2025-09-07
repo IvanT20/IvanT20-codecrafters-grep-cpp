@@ -1,38 +1,21 @@
-[![progress-banner](https://backend.codecrafters.io/progress/grep/87b9ddd1-3893-4ae1-a53c-1dbdebd19969)](https://app.codecrafters.io/users/codecrafters-bot?r=2qF)
+Built as a part of CodeCrafters build your own grep challenge.
 
-This is a starting point for C++ solutions to the
-["Build Your Own grep" Challenge](https://app.codecrafters.io/courses/grep/overview).
+# Current Features
 
-[Regular expressions](https://en.wikipedia.org/wiki/Regular_expression)
-(Regexes, for short) are patterns used to match character combinations in
-strings. [`grep`](https://en.wikipedia.org/wiki/Grep) is a CLI tool for
-searching using Regexes.
+- Supports literals
+- Supports digits
+- Supports word characters
+- Supports positive and negative character groups
+- Supports start of string anchor
+- Supports end of string anchor
+- Supports one or more quantifier
+- Supports zero or one quantifier
+- Supports wildcard
 
-In this challenge you'll build your own implementation of `grep`. Along the way
-we'll learn about Regex syntax, how parsers/lexers work, and how regular
-expressions are evaluated.
+# How to Build
 
-**Note**: If you're viewing this repo on GitHub, head over to
-[codecrafters.io](https://codecrafters.io) to try the challenge.
+Have CMake installed and run the commands
 
-# Passing the first stage
+1. `cmake -B build -S .`
 
-The entry point for your `grep` implementation is in `src/Server.cpp`. Study and
-uncomment the relevant code, and push your changes to pass the first stage:
-
-```sh
-git commit -am "pass 1st stage" # any msg
-git push origin master
-```
-
-Time to move on to the next stage!
-
-# Stage 2 & beyond
-
-Note: This section is for stages 2 and beyond.
-
-1. Ensure you have `cmake` installed locally
-1. Run `./your_program.sh` to run your program, which is implemented in
-   `src/Server.cpp`.
-1. Commit your changes and run `git push origin master` to submit your solution
-   to CodeCrafters. Test output will be streamed to your terminal.
+2. `cmake --build build`
